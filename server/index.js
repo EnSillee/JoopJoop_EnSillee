@@ -24,18 +24,16 @@ app.use(
   session({
     secret: "somethingsecretgoeshere",
     resave: false,
-    saveUninitialized: true, // 배포했을 때 false로 수정해야함
-    cookie: { secure: true }, // 배포했을 때 지워 줘야함
-    // 배포시 추가할 코드
-    // proxy: true,
-    // cookie: {
-    //   httpOnly: true,
-    //   maxAge: 1000 * 60 * 60 * 5,
-    //   sameSite: "strict", // sameSite임을 명시
-    //   domain: ".joopjoop.site", // 앞에 .을 찍어야함
-    //   secure: true, // https환경임을 명시
-    // },
-  }),
+    saveUninitialized: false, // oauth를 위해 false로 수정해야할수있음
+     proxy: true,
+     cookie: {
+       httpOnly: true,
+       maxAge: 1000 * 60 * 60 * 5,
+       sameSite: "strict", // sameSite임을 명시
+       domain: ".joopjoop.site", // 앞에 .을 찍어야함
+       secure: true, // https환경임을 명시
+     },
+  })
 );
 
 mongoose
@@ -49,8 +47,7 @@ mongoose
 const corsOptions = {
   origin: true,
   credentials: true,
-  // optionSuccessStatus: 200,
-  method: ["GET", "POST", "DELETE", "PATCH"],
+  optionSuccessStatus: 200,
 };
 
 // kakaoPassportConfig(app);
@@ -80,6 +77,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single("file");
 app.post("/upload", (req, res) => {
   upload(req, res, err => {
+console.log(res.req.file)
     if (err) {
       console.log(err);
       return res.json({ success: false, err });

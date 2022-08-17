@@ -101,7 +101,7 @@ router.get("/", async (req, res) => {
 
 // Join(POST) GATHERING
 router.post("/participation", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const { gathering_id, participant_id } = req.body;
     const gathering_participanted = await Gathering.findById(gathering_id);
